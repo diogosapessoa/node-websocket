@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- https://picocss.com/ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.fluid.classless.min.css">
+    <title>Websocket client</title>
+
+    <style>
+        .center-text {
+            text-align: center;
+        }
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            const inputText = document.querySelector('#message')
+            const sendButton = document.querySelector('#send')
+            const output = document.querySelector('#messages')
+
+            const socket = new WebSocket('ws://localhost:8080')
+
+            const send = () => {
+                if (inputText.value) {
+                    socket.send(inputText.value)
+                    inputText.value = null
+                }
+            }
+
+            const enterPressed = (event) => {
+                event.preventDefault()
+                if (event.keyCode === 13) send()
+            }
+
+            const onFail = () => {
+                alert('Ops, an error ocurred!')
+                window.location.reload(true)
+            }
+
+            const onOpen = () => {
+                inputText.disabled = false
+                sendButton.disabled = false
+
+                sendButton.addEventListener('click', send)
+                inputText.addEventListener('keyup', enterPressed)
+            }
+
+            const onMessage = (message) => message.data.text().then(text => {
+                output.innerHTML += `<div>&#x2022; ${text}</div>`
+            })
+
+            socket.onerror = onFail
+            socket.onclose = onFail
+            socket.onopen = onOpen
+            socket.onmessage = onMessage
+        }
+    </script>
+
+</head>
+
+<body>
+    <main>
+        <hgroup class="center-text">
+            <h1>WebSocket Client</h1>
+            <h2>Press <kbd>Return&#x23CE;</kbd> to send</h2>
+        </hgroup>
+        <input id="message" disabled="true" placeholder="Enter the message..." />
+        <button id="send" disabled="true">SEND</button>
+        <article id="messages" class="center-text" />
+    </main>
+</body>
+
+</html>

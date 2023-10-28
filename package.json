@@ -1,0 +1,17 @@
+{
+  "name": "node-websocket",
+  "version": "1.0.0",
+  "description": "sample node websocket",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "diogosapessoa@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^6.0.3",
+    "ws": "^8.14.2"
+  }
+}
